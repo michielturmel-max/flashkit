@@ -1,0 +1,23 @@
+{
+  "id": "zeus-magisk",
+  "name": "Xiaomi 12 Pro",
+  "codename": "zeus",
+  "match": ["zeus"],
+  "vendor": "Xiaomi",
+  "description": "Magisk terugzetten na een ROM-update, naar de actieve A/B-slot.",
+  "slot": true,
+  "requires_file": true,
+  "source": null,
+  "backup": {
+    "required": true,
+    "partitions": ["boot"]
+  },
+  "steps": [
+    {"kind": "fastboot", "partition": "boot_{slot}", "artifact": "{file}"},
+    {"kind": "reboot", "target": "system"},
+    {"kind": "wait", "mode": "adb", "timeout": 300},
+    {"kind": "verify", "title": "Android is opgestart", "command": "getprop sys.boot_completed", "expect": "1"},
+    {"kind": "verify", "title": "Magisk draait", "command": "magisk -v", "expect": "MAGISK:R"}
+  ],
+  "notes": "Het image is doorgaans magisk_patched-*.img uit de Magisk-app. Zonder backup van boot wordt er niet geflasht."
+}

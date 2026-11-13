@@ -1,0 +1,44 @@
+{
+  "id": "lamu-lineage",
+  "name": "Moto G15 Power",
+  "codename": "lamu",
+  "match": ["lamu"],
+  "vendor": "Motorola",
+  "description": "LineageOS 23.2 via fastboot en recovery-sideload.",
+  "slot": true,
+  "source": {
+    "type": "lineage",
+    "device": "lamu",
+    "files": [
+      "lineage-*-lamu-signed.zip",
+      "boot.img",
+      "dtbo.img",
+      "init_boot.img",
+      "lk.img",
+      "vbmeta.img",
+      "vendor_boot.img",
+      "build-manifest.xml"
+    ]
+  },
+  "backup": {
+    "required": true,
+    "partitions": ["boot", "lk", "vbmeta"]
+  },
+  "steps": [
+    {"kind": "fastboot", "partition": "boot", "artifact": "boot.img"},
+    {"kind": "fastboot", "partition": "dtbo", "artifact": "dtbo.img"},
+    {"kind": "fastboot", "partition": "init_boot", "artifact": "init_boot.img"},
+    {"kind": "fastboot", "partition": "lk", "artifact": "lk.img"},
+    {"kind": "fastboot", "partition": "vbmeta", "artifact": "vbmeta.img"},
+    {"kind": "fastboot", "partition": "vendor_boot", "artifact": "vendor_boot.img"},
+    {"kind": "reboot", "target": "recovery"},
+    {
+      "kind": "manual",
+      "title": "data formatteren en sideload kiezen",
+      "text": "Kies in Lineage Recovery: Factory reset -> Format data -> ja. Ga terug en kies Apply update -> Apply from ADB."
+    },
+    {"kind": "wait", "mode": "sideload", "timeout": 300},
+    {"kind": "sideload", "artifact": "lineage-*-lamu-signed.zip"}
+  ],
+  "notes": "De bootloader van dit toestel is nog dicht; de BROM-route via antumbra/mtkclient is eerst nodig. Flashen weigert zolang unlocked niet 'yes' is."
+}

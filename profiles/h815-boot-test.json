@@ -1,0 +1,24 @@
+{
+  "id": "h815-boot-test",
+  "name": "LG G4 (test in geheugen)",
+  "codename": "h815",
+  "match": ["h815", "lg-h815", "p1"],
+  "vendor": "LG",
+  "description": "Start een image met fastboot boot; schrijft niets naar het toestel.",
+  "slot": false,
+  "requires_file": true,
+  "source": null,
+  "backup": {
+    "required": true,
+    "partitions": ["boot"]
+  },
+  "steps": [
+    {"kind": "fastboot-boot", "partition": "boot", "artifact": "{file}"},
+    {
+      "kind": "manual",
+      "title": "test het image",
+      "text": "Het image draait nu uit het geheugen. Herstart het toestel om terug te gaan; er is niets geschreven."
+    }
+  ],
+  "notes": "Dit toestel heeft geen A/B-slot en geen terugvalslot. Test daarom altijd eerst met fastboot boot."
+}

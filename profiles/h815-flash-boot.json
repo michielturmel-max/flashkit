@@ -1,0 +1,22 @@
+{
+  "id": "h815-flash-boot",
+  "name": "LG G4 (boot schrijven)",
+  "codename": "h815",
+  "match": ["h815", "lg-h815", "p1"],
+  "vendor": "LG",
+  "description": "Schrijf een image naar boot. Onomkeerbaar zonder geldige backup.",
+  "slot": false,
+  "requires_file": true,
+  "source": null,
+  "backup": {
+    "required": true,
+    "partitions": ["boot"]
+  },
+  "steps": [
+    {"kind": "fastboot", "partition": "boot", "artifact": "{file}"},
+    {"kind": "reboot", "target": "system"},
+    {"kind": "wait", "mode": "adb", "timeout": 300},
+    {"kind": "verify", "title": "Android is opgestart", "command": "getprop sys.boot_completed", "expect": "1"}
+  ],
+  "notes": "Er is geen terugvalslot. Draai eerst h815-boot-test en zorg dat flashkit backup een boot.img met kloppende sha256 heeft."
+}

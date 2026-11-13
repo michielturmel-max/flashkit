@@ -1,0 +1,42 @@
+{
+  "id": "komodo-lineage",
+  "name": "Pixel 9 Pro XL",
+  "codename": "komodo",
+  "match": ["komodo"],
+  "vendor": "Google",
+  "description": "LineageOS 24.0 via fastboot en recovery-sideload.",
+  "slot": true,
+  "source": {
+    "type": "lineage",
+    "device": "komodo",
+    "files": [
+      "lineage-*-komodo-signed.zip",
+      "boot.img",
+      "dtbo.img",
+      "vendor_kernel_boot.img",
+      "vendor_boot.img",
+      "build-manifest.xml"
+    ]
+  },
+  "backup": {
+    "required": false,
+    "partitions": ["boot", "dtbo"]
+  },
+  "steps": [
+    {"kind": "fastboot", "partition": "boot", "artifact": "boot.img"},
+    {"kind": "fastboot", "partition": "dtbo", "artifact": "dtbo.img"},
+    {"kind": "fastboot", "partition": "vendor_kernel_boot", "artifact": "vendor_kernel_boot.img"},
+    {"kind": "reboot", "target": "bootloader"},
+    {"kind": "wait", "mode": "fastboot", "timeout": 120},
+    {"kind": "fastboot", "partition": "vendor_boot", "artifact": "vendor_boot.img"},
+    {"kind": "reboot", "target": "recovery"},
+    {
+      "kind": "manual",
+      "title": "data formatteren en sideload kiezen",
+      "text": "Kies in Lineage Recovery: Factory reset -> Format data -> ja. Ga terug en kies Apply update -> Apply from ADB."
+    },
+    {"kind": "wait", "mode": "sideload", "timeout": 300},
+    {"kind": "sideload", "artifact": "lineage-*-komodo-signed.zip"}
+  ],
+  "notes": "De data op het toestel gaat verloren. De images zijn herdownloadbaar, daarom is een backup niet verplicht."
+}

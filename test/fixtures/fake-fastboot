@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import os
+import sys
+
+args = sys.argv[1:]
+if len(args) >= 2 and args[0] == "-s":
+    args = args[2:]
+
+if args == ["devices"]:
+    for line in os.environ.get("FAKE_FASTBOOT_DEVICES", "").splitlines():
+        if line.strip():
+            print(line)
+    raise SystemExit(0)
+
+if args == ["--version"]:
+    print("fastboot version 37.0.1-12345678")
+    print("Installed as /usr/bin/fastboot")
+    raise SystemExit(0)
+
+if args and args[0] == "getvar":
+    key = args[-1]
+    values = {}
+    for item in os.environ.get("FAKE_FASTBOOT_VARS", "").split(","):
+        if "=" in item:
+            name, value = item.split("=", 1)
+            values[name] = value
+    print(f"{key}: {values.get(key, '')}", file=sys.stderr)
+    raise SystemExit(0)
+
+if args[:2] == ["flashing", "get_unlock_ability"]:
+    print(f"get_unlock_ability: {os.environ.get('FAKE_UNLOCK_ABILITY', '1')}", file=sys.stderr)
+    raise SystemExit(0)
+
+if args and args[0] in {"flash", "boot"}:
+    print(f"Sending '{args[1] if len(args) > 1 else '?'}' (0x{len(args)})")
+    print("OKAY [  0.1s]")
+    raise SystemExit(0)
+
+if args and args[0] == "reboot":
+    print("rebooting into bootloader...")
+    print("OKAY [  0.1s]")
+    raise SystemExit(0)
+
+if args and args[0] == "flashing":
+    print("OKAY [  0.1s]")
+    raise SystemExit(0)
+
+print(f"onverwacht fastboot-commando: {args}", file=sys.stderr)
+raise SystemExit(1)

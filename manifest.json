@@ -1,0 +1,7 @@
+{
+  "id": "flashkit",
+  "name": "flashkit",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Eén gereedschap voor meerdere Android-toestellen: profielen, checksums, backups en flashen."
+}
